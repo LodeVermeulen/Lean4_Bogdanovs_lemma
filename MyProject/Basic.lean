@@ -58,5 +58,12 @@ every vertex is matched by two edges in M1 ∪ M2. This constitutes a union of c
 -- Show that the union of two disjoint perfect matchings is empty
 
 /- Two disjoint perfect matchings -/
-def IsDisjointPerfectMatchingPair (M1 M2 : Subgraph G) : Prop :=
-M1.IsPerfectMatching ∧ M2.IsPerfectMatching ∧ M1.edgeSet ∩ M2.edgeSet = ∅
+def IsDisjointPerfectMatchingPair (M₁ M₂ : Subgraph G) : Prop :=
+M₁.IsPerfectMatching ∧ M₂.IsPerfectMatching ∧ M₁.edgeSet ∩ M₂.edgeSet = ∅
+
+lemma disjoint_PMs_form_union_of_cycles (M1 M₂ : Subgraph G)
+(h : IsDisjointPerfectMatchingPair M₁ M₂) :
+let PM_union := (M₁.edgeSet ∪ M₂.edgeSet)
+∀ ⦃v : V⦄ (w : G.Walk v v), w.IsCycle := by -- from IsAcyclic
+-- M1.edgeSet ∪ M2.edgeSet = ∅ := by
+sorry
