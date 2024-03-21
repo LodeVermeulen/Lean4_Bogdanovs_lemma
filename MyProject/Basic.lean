@@ -9,7 +9,7 @@ universe u
 
 namespace SimpleGraph
 
-variable {V : Type u} {G : SimpleGraph V} (M1 : Subgraph G) (M2 : Subgraph G)
+variable {V : Type u} {G : SimpleGraph V}
 
 namespace Subgraph
 
@@ -43,7 +43,7 @@ Prove the same for splitting into an odd number of vertices.
 It might be useful to show that c_max(2n)>=2. Prove by using cycles
 -/
 
-/--
+/-
 Two disjoint PMs form a disjoint union of cycles
 
 Prove by using that every vertex in a graph is matched by an edge from a perfect
@@ -57,6 +57,6 @@ every vertex is matched by two edges in M1 ∪ M2. This constitutes a union of c
 
 -- Show that the union of two disjoint perfect matchings is empty
 
-
-def isDisjointPerfectMatchingPair : Prop :=
-M1.IsPerfectMatching ∧ M2.IsPerfectMatching ∧ M1.edgeSet ∪ M2.edgeSet = ∅
+/- Two disjoint perfect matchings -/
+def IsDisjointPerfectMatchingPair (M1 M2 : Subgraph G) : Prop :=
+M1.IsPerfectMatching ∧ M2.IsPerfectMatching ∧ M1.edgeSet ∩ M2.edgeSet = ∅
