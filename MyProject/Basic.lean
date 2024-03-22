@@ -1,11 +1,12 @@
-import mathlib.combinatorics.simpleGraph.connectivity
 import Mathlib.Combinatorics.SimpleGraph.DegreeSum
 import Mathlib.Combinatorics.SimpleGraph.Subgraph
 import Mathlib.Combinatorics.SimpleGraph.Matching
 import Mathlib.Combinatorics.SimpleGraph.Subgraph
+import Mathlib.Combinatorics.SimpleGraph.Acyclic
+-- import Mathlib.Combinatorics.SimpleGraph.Connectivity
 import Mathlib.Data.List.Rotate
 
-universe u
+universe u -- v
 
 namespace SimpleGraph
 
@@ -61,9 +62,13 @@ every vertex is matched by two edges in M1 ∪ M2. This constitutes a union of c
 def IsDisjointPerfectMatchingPair (M₁ M₂ : Subgraph G) : Prop :=
 M₁.IsPerfectMatching ∧ M₂.IsPerfectMatching ∧ M₁.edgeSet ∩ M₂.edgeSet = ∅
 
-lemma disjoint_PMs_form_union_of_cycles (M1 M₂ : Subgraph G)
+def IsCyclic : Prop := ∀ ⦃v : V⦄ (c : G.Walk v v), c.IsCycle
+
+lemma disjoint_PMs_form_union_of_cycles (M₁ M₂ : Subgraph G)
 (h : IsDisjointPerfectMatchingPair M₁ M₂) :
-let PM_union := (M₁.edgeSet ∪ M₂.edgeSet)
-∀ ⦃v : V⦄ (w : G.Walk v v), w.IsCycle := by -- from IsAcyclic
--- M1.edgeSet ∪ M2.edgeSet = ∅ := by
+-- let PM_union := (M₁.edgeSet ∪ M₂.edgeSet)
+let PM_union := (M₁ ⊔ M₂).coe
+-- let PM_union := SimpleGraph (M₁ ⊔ M₂).verts
+-- ∀ ⦃v : V⦄ (w : PM_union.Walk v v), w.IsCycle := by -- from IsAcyclic
+¬IsAcyclic PM_union := by
 sorry
