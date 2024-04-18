@@ -25,16 +25,32 @@ def IsDisjointUnionOfCycles (G : SimpleGraph V) : Prop :=
   ∧ ∀ H ∈ P, ∃ (v : V) (c : G.Walk v v), c.IsCycle ∧ H = c.toSubgraph /- every subgraph `H ∈ P`
     consists of the vertices and edges of some cycle of `G`. -/
 
+/- The vertex set of a PM is the same as the graph it is a subgraph of -/
+lemma PM_verts_eq_vertex_set (M : Subgraph G) (hm : M.IsPerfectMatching) :
+  M.verts = Set.univ := by -- could show = G.support instead
+  refine isSpanning_iff.mp ?_
+  obtain ⟨-,hs⟩ := hm
+  exact hs
+
+/- Two PMs of the same graph have the same vertex sets -/
+lemma PMs_same_verts (M₁ M₂ : Subgraph G) (hM₁ : M₁.IsPerfectMatching)
+  (hM₂ : M₂.IsPerfectMatching) : M₁.verts = M₂.verts := by
+    have hM₁_univ : M₁.verts = Set.univ := PM_verts_eq_vertex_set M₁ hM₁
+    have hM₂_univ : M₂.verts = Set.univ := PM_verts_eq_vertex_set M₂ hM₂
+    simp_all only
+
 variable (M₁ M₂ : Subgraph G) (unionGraph := fromEdgeSet (M₁.edgeSet ∪ M₂.edgeSet))
   [LocallyFinite unionGraph] [∀ v, Fintype (M₁.neighborSet v)] [∀ v, Fintype (M₂.neighborSet v)]
+  [Fintype (neighbourSet (M₁ ⊔ M₂))]
 
-/- The degree of the union of 2 disjoint graphs are their degrees added -/
-lemma degree_of_disjoint_union_eq_sum_of_degrees (hd : Disjoint M₁.edgeSet M₂.edgeSet)
-  (hM₁ : ∀ v : V, v ∈ M₁.verts → M₁.degree v = n) -- M₁ = n-regular
-  (hM₂ : ∀ v : V, v ∈ M₂.verts → M₂.degree v = m) : -- M₂ = m-regular
-   unionGraph.IsRegularOfDegree (n + m) := by
-    intro v
-    simp_all only
+/- The degree of the union of 2 finite disjoint graphs are their degrees added -/
+lemma degree_of_disjoint_union_eq_sum_of_degrees
+  (hd : Disjoint M₁.edgeSet M₂.edgeSet)
+  (hM₁ : ∀ v: V, v ∈ M₁.verts → M₁.degree v = n) -- M₁ = n-regular
+  (hM₂ : ∀ v: V, v ∈ M₂.verts → M₂.degree v = m) : -- M₂ = m-regular
+   unionGraph.degree v = n + m := by
+    -- intro v
+    -- rw [← finset_card_neighborSet_eq_degree]
     sorry
 
 lemma disjoint_PMs_form_2_regular_graph (hm : IsDisjointPerfectMatchingPair M₁ M₂):
