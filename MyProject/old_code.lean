@@ -58,6 +58,22 @@ lemma disjoint_PMs_form_union_of_cycles' (M₁ M₂ : Subgraph G)
   · exact sSup_univ
   · sorry -- use hM₁, hM₂ to show that subgraphs made with M₁, M₂ exist that are cycles
 
+/- The vertex set of a PM is the same as the graph it is a subgraph of -/
+lemma PM_verts_eq_vertex_set (M : Subgraph G) (hm : M.IsPerfectMatching) :
+  M.verts = Set.univ := by -- could show = G.support instead
+  refine isSpanning_iff.mp ?_
+  obtain ⟨-,hs⟩ := hm
+  exact hs
+
+/- Two PMs of the same graph have the same vertex sets -/
+lemma PMs_same_verts (M₁ M₂ : Subgraph G) (hM₁ : M₁.IsSpanning)
+  (hM₂ : M₂.IsSpanning) : M₁.verts = M₂.verts := by
+    have hM₁_univ : M₁.verts = Set.univ := isSpanning_iff.mp ?_
+    have hM₂_univ : M₂.verts = Set.univ := isSpanning_iff.mp ?_
+    simp_all only
+    simp_all only
+    simp_all only
+
 /- A Hamiltonian cycle. Copied from github.com/leanprover-community/mathlib/pull/8737 -/
 -- def isHamiltonianCycle {u : V} (p : G.Walk u u) : Prop :=
 -- p.IsTrail ∧ ∀ v, p.support.tail.count v = 1
