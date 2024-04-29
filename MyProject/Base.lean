@@ -1,6 +1,6 @@
 import Mathlib.Combinatorics.SimpleGraph.Matching
 
-/- Some helpful lemmas for disjoint graphs -/
+/- Some lemmas for disjoint graphs -/
 
 universe u
 

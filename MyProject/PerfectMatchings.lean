@@ -8,6 +8,10 @@ namespace SimpleGraph
 
 variable [Fintype V] {V : Type u} {G : SimpleGraph V} (v : V)
 
+/- A graph with exclusively disjoint perfect matchings -/
+def IsExclusivelyDisjointPMGraph (G : SimpleGraph V) : Prop :=
+  {M : Subgraph G | M.IsPerfectMatching}.PairwiseDisjoint Subgraph.edgeSet
+
 namespace Subgraph
 
 /- The vertex set of a spanning subgraph is
