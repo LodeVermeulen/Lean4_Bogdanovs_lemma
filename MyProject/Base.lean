@@ -1,4 +1,6 @@
 import Mathlib.Combinatorics.SimpleGraph.Matching
+import Mathlib.Combinatorics.SimpleGraph.Connectivity
+import Mathlib.Order.SymmDiff
 
 /- Some lemmas for disjoint graphs -/
 
@@ -6,9 +8,19 @@ universe u
 
 namespace SimpleGraph
 
-variable [Fintype V] {V : Type u} {G : SimpleGraph V} (v : V)
+variable [Fintype V] {V : Type u} {G : SimpleGraph V} {M : Subgraph G} (v : V)
+
+/- Ported from https://github.com/leanprover-community/mathlib/blob/kmill_hamiltonian/src/hamiltonian2.lean -/
+-- Keeping only the part of the graph that includes the connected component
+def ConnectedComponent.induce (c : G.ConnectedComponent) : SimpleGraph V :=
+  (G.induce c.supp).spanningCoe
 
 namespace Subgraph
+
+lemma sub_graph_leq_G (M : Subgraph G) : M.spanningCoe ≤ G := by
+  intros u v
+  simp
+  exact Adj.adj_sub
 
 /-- Adjusted from https://github.com/leanprover-community/mathlib4/blob/6096b4a14c21be6102c467d7a49b93faa9993e64/Mathlib/Combinatorics/SimpleGraph/Finite.lean#L292-L293 -/
 @[reducible]
@@ -23,6 +35,7 @@ def IsRegularOfDegree (d : ℕ) (M : Subgraph G) [LocallyFinite M] : Prop :=
 def neighborFinset (M : Subgraph G) [LocallyFinite M] : Finset V :=
   (M.neighborSet v).toFinset
 
+/- Ported from https://github.com/leanprover-community/mathlib/blob/kmill_hamiltonian/src/hamiltonian2.lean -/
 theorem disjoint_iff (M M' : Subgraph G) :
   Disjoint M.edgeSet M'.edgeSet ↔ ∀ v w, M.Adj v w → M'.Adj v w → false := by
   refine ⟨?_,?_⟩
@@ -38,6 +51,7 @@ lemma neighbor_finset_sup (M₁ M₂ : Subgraph G) [DecidableEq V]
     ext w
     simp
 
+/- Ported from https://github.com/leanprover-community/mathlib/blob/kmill_hamiltonian/src/hamiltonian2.lean -/
 lemma disjoint_neighbor_set_of_disjoint (M₁ M₂ : Subgraph G)
   (hd : Disjoint M₁.edgeSet M₂.edgeSet) :
     Disjoint (M₁.neighborSet v) (M₂.neighborSet v) := by

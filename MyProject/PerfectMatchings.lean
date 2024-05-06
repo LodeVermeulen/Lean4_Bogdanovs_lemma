@@ -32,3 +32,23 @@ lemma PMs_same_verts (M₁ M₂ : Subgraph G) (hM₁ : M₁.IsSpanning)
 lemma PM_is_1_regular (M : Subgraph G) [LocallyFinite M] :
     M.IsPerfectMatching ↔ M.IsRegularOfDegree 1 := by
       rw [isPerfectMatching_iff_forall_degree, IsRegularOfDegree]
+
+/- Ported from https://github.com/leanprover-community/mathlib/blob/kmill_hamiltonian/src/hamiltonian2.lean -/
+-- The predicate that the graph of the symmetric difference of M₁ and a connected component is a perfect matching
+lemma flip_part_of_disjoint (M₁ M₂ : Subgraph G) (hd : Disjoint M₁.edgeSet M₂.edgeSet)
+  (hM₁ : M₁.IsPerfectMatching) (hM₂ : M₂.IsPerfectMatching)
+  (c : (M₁ ⊔ M₂).spanningCoe.ConnectedComponent)
+  (hsd : (symmDiff M₁.spanningCoe c.induce) ≤ G) :
+  (SimpleGraph.toSubgraph (symmDiff M₁.spanningCoe c.induce) hsd).IsPerfectMatching := by sorry
+
+/- Ported from https://github.com/leanprover-community/mathlib/blob/kmill_hamiltonian/src/hamiltonian2.lean -/
+lemma flip_part_of_disjoint_le (M₁ M₂ : Subgraph G)
+  (c : (M₁ ⊔ M₂).spanningCoe.ConnectedComponent) :
+  symmDiff M₁.spanningCoe c.induce ≤ M₁.spanningCoe ⊔ M₂.spanningCoe := by
+    sorry
+
+/- Ported from https://github.com/leanprover-community/mathlib/blob/kmill_hamiltonian/src/hamiltonian2.lean -/
+lemma ne_symm_diff (hed : G.IsExclusivelyDisjointPMGraph) (M₁ M₂ : Subgraph G)
+  (hM₁ : M₁.IsPerfectMatching) (hM₂ : M₂.IsPerfectMatching) (hne : M₁ ≠ M₂) (v : V) :
+  M₁.spanningCoe ≠ symmDiff M₁.spanningCoe ((M₁ ⊔ M₂).spanningCoe.connectedComponentMk v).induce := by
+    sorry
