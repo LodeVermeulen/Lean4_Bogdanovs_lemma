@@ -44,23 +44,21 @@ theorem excl_disj_PM_graph_union_connected (hed : G.IsExclusivelyDisjointPMGraph
       have hdisj := hed hM₁ hM₂ hne
       have unionleqG : M₁.spanningCoe ⊔ M₂.spanningCoe ≤ G := sup_le (sub_graph_leq_G M₁) (sub_graph_leq_G M₂)
       let c := (M₁ ⊔ M₂).spanningCoe.connectedComponentMk v
-      let symmDiffM1_c := symmDiff M₁.spanningCoe c.induce
-      have symmDiffleqG : symmDiffM1_c ≤ G := le_trans (flip_part_of_disjoint_le M₁ M₂ c) unionleqG
-      have symmDiffSubgraph := G.toSubgraph symmDiffM1_c symmDiffleqG
+      let symmDiffM₁_c := symmDiff M₁.spanningCoe c.induce
+      have symmDiffleqG : symmDiffM₁_c ≤ G := le_trans (flip_part_of_disjoint_le M₁ M₂ c) unionleqG
+      let symmDiffSubgraph := G.toSubgraph symmDiffM₁_c symmDiffleqG
       have symmDiffIsPM := flip_part_of_disjoint M₁ M₂ hdisj hM₁ hM₂ c symmDiffleqG
-      have M1neqsymmDiff : M₁.spanningCoe ≠ symmDiff M₁.spanningCoe c.induce := ne_symm_diff hed M₁ M₂ hM₁ hM₂ hne v
-      /- M₁ ≤ G and M₁ ∆ c ≤ G but also M₁ isPM and (M₁ ∆ c).isPM, so M₁ and (M₁ ∆ c) are disjoint (remember this is a proof by contradiction)-/
+      have M1neqsymmDiff : M₁.spanningCoe ≠ symmDiffM₁_c := ne_symm_diff hed M₁ M₂ hM₁ hM₂ hne v
       have symmDiffDisjoint : Disjoint M₁.edgeSet symmDiffSubgraph.edgeSet := by
-        sorry
+      /- M₁ ≤ G and M₁ ∆ c ≤ G but also M₁ isPM and (M₁ ∆ c).isPM, so M₁ and (M₁ ∆ c) are disjoint because of hed (remember this is a proof by contradiction)-/
         -- hed M₁ hM₁ symmDiffSubgraph symmDiffIsPM
-      sorry
+        sorry
+      have h1 : (M₁.spanningCoe \ c.induce).edgeSet ≤ M₁.spanningCoe.edgeSet := by sorry
+      have h2 : (M₁.spanningCoe \ c.induce).edgeSet ≤ symmDiffSubgraph.edgeSet := by sorry
+      have h3 : (M₁.spanningCoe \ c.induce).edgeSet := by sorry
+      exact symmDiffDisjoint h1 h2 h3
     /- Show that V is nonempty -/
     · by_contra h
       rw [not_nonempty_iff] at h
       apply hne
-      ext v w
       exact h.elim v
-      refine ⟨?_,?_⟩
-      -- use disjoint_iff to show M₁.Adj v w → M₂.Adj v w and its reverse
-      · sorry
-      · sorry

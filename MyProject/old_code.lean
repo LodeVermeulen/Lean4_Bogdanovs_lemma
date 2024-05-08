@@ -101,3 +101,40 @@ lemma PMs_same_verts (M₁ M₂ : Subgraph G) (hM₁ : M₁.IsSpanning)
 
 -- let P := we can use this to make the set of subgraphs
 -- use P we can use this to solve the first subgoal (defining the required set)
+
+-- version with perfect_matchings_disjoint
+theorem excl_disj_PM_graph_union_connected (hed : G.perfect_matchings_disjoint)
+  (hM₁ : M₁.IsPerfectMatching) (hM₂ : M₂.IsPerfectMatching) (hne : M₁ ≠ M₂) :
+  (M₁ ⊔ M₂).spanningCoe.Connected := by
+    rw [connected_iff]
+    refine ⟨?_, ?_⟩
+    /- Show that M₁ ⊔ M₂ is Preconnected -/
+    · by_contra h
+      simp only [Preconnected, not_forall] at h
+      obtain ⟨v, v', h⟩ := h
+      have hdisj := hed (sub_graph_leq_G M₁) (sub_graph_leq_G M₂) hM₁ hM₂ hne
+      have unionleqG : M₁.spanningCoe ⊔ M₂.spanningCoe ≤ G := sup_le (sub_graph_leq_G M₁) (sub_graph_leq_G M₂)
+      let c := (M₁ ⊔ M₂).spanningCoe.connectedComponentMk v
+      let symmDiffM1_c := symmDiff M₁.spanningCoe c.induce
+      have symmDiffleqG : symmDiffM1_c ≤ G := le_trans (flip_part_of_disjoint_le M₁ M₂ c) unionleqG
+      have symmDiffSubgraph := G.toSubgraph symmDiffM1_c symmDiffleqG
+      have symmDiffIsPM := flip_part_of_disjoint M₁ M₂ hdisj hM₁ hM₂ c symmDiffleqG
+      have : M₁.spanningCoe ≠ symmDiff M₁.spanningCoe c.induce := ne_symm_diff hed M₁ M₂ hM₁ hM₂ hne v
+      -- (le_trans (flip_part_of_disjoint_le M₁ M₂ c) unionleqG): need to show that symmDiff M₁ c ≤ G. To do this, show that symmDiff M₁ c ≤ M₁ ⊔ M₂ ≤ G.
+      have := hed (sub_graph_leq_G M₁) (le_trans (flip_part_of_disjoint_le M₁ M₂ c) unionleqG) hM₁ symmDiffIsPM this
+      have symmDiffDisjoint : Disjoint M₁.edgeSet symmDiffSubgraph.edgeSet := by
+      /- M₁ ≤ G and M₁ ∆ c ≤ G but also M₁ isPM and (M₁ ∆ c).isPM, so M₁ and (M₁ ∆ c) are disjoint because of hed (remember this is a proof by contradiction)-/
+        -- hed M₁ hM₁ symmDiffSubgraph symmDiffIsPM
+        sorry
+      have h1 : (M₁.spanningCoe \ c.induce).edgeSet ≤ M₁.spanningCoe.edgeSet := by sorry
+      have h2 : (M₁.spanningCoe \ c.induce).edgeSet ≤ symmDiffSubgraph.edgeSet := by sorry
+      apply symmDiffDisjoint
+      apply h1
+      apply h2
+      have h3 : (M₁.spanningCoe \ c.induce).edgeSet := by sorry
+      exact h3
+    /- Show that V is nonempty -/
+    · by_contra h
+      rw [not_nonempty_iff] at h
+      apply hne
+      exact h.elim v

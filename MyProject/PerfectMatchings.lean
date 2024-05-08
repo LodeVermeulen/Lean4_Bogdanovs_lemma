@@ -12,6 +12,10 @@ variable [Fintype V] {V : Type u} {G : SimpleGraph V} (v : V)
 def IsExclusivelyDisjointPMGraph (G : SimpleGraph V) : Prop :=
   {M : Subgraph G | M.IsPerfectMatching}.PairwiseDisjoint Subgraph.edgeSet
 
+def perfect_matchings_disjoint (G : SimpleGraph V) : Prop :=
+∀ {M₁ M₂ : Subgraph G}, M₁.spanningCoe ≤ G → M₂.spanningCoe ≤ G →
+  M₁.IsPerfectMatching → M₂.IsPerfectMatching → M₁ ≠ M₂ → Disjoint M₁.edgeSet M₂.edgeSet
+
 namespace Subgraph
 
 /- The vertex set of a spanning subgraph is
