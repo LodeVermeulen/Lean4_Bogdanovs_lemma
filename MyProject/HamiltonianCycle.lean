@@ -35,4 +35,11 @@ end Walk
 def IsHamiltonian (G : SimpleGraph V) : Prop :=
   Fintype.card V ≠ 1 → ∃ a, ∃ p : G.Walk a a, p.IsHamiltonianCycle
 
+variable {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β] {G : SimpleGraph α}
+  {a b : α} {p : G.Walk a b}
+
+-- lemma IsHamiltonian.mono {H : SimpleGraph α} (hGH : G ≤ H) (hG : G.IsHamiltonian) :
+--     H.IsHamiltonian :=
+--   fun hα ↦ let ⟨_, p, hp⟩ := hG hα; ⟨_, p.map $ .ofLe hGH, hp.map _ bijective_id⟩
+
 namespace Subgraph

@@ -29,11 +29,17 @@ lemma disj_union_perfect_matchings_2_regular (hd : Disjoint M₁.edgeSet M₂.ed
     rw [PM_is_1_regular] at hM₁ hM₂
     exact disj_union_regular M₁ M₂ hd hM₁ hM₂
 
+
+variable (hm := M₁.IsMatching)
+
+noncomputable def other {M : Subgraph G} (hm : M.IsMatching) (v : M.verts) : V :=
+  (hm v.property).choose
+
 /-- The union of two distinct perfect matchings in a graph with the property that all perfect
 matchings are disjoint is connected. -/
 /- Ported from: https://github.com/leanprover-community/mathlib/blob/kmill_hamiltonian/src/hamiltonian2.lean-/
 theorem excl_disj_PM_graph_union_connected (hed : G.IsExclusivelyDisjointPMGraph)
-  (hM₁ : M₁.IsPerfectMatching) (hM₂ : M₂.IsPerfectMatching) (hne : M₁ ≠ M₂) :
+  (hM₁ : M₁.IsPerfectMatching) (hM₂ : M₂.IsPerfectMatching) (hne : M₁ ≠ M₂) (x : V) (hx : x ∈ M₁.verts) :
   (M₁ ⊔ M₂).spanningCoe.Connected := by
     rw [connected_iff]
     refine ⟨?_, ?_⟩
@@ -41,6 +47,8 @@ theorem excl_disj_PM_graph_union_connected (hed : G.IsExclusivelyDisjointPMGraph
     · by_contra h
       simp only [Preconnected, not_forall] at h
       obtain ⟨v, v', h⟩ := h
+      -- show that v, v' are not reachable in M₁ ⊔ M₂
+      -- have hin : v' ∈ M₁.verts := by refine mem_verts_if_mem_edge ?he ?hv
       have hdisj := hed hM₁ hM₂ hne
       have unionleqG : M₁.spanningCoe ⊔ M₂.spanningCoe ≤ G := sup_le (sub_graph_leq_G M₁) (sub_graph_leq_G M₂)
       let c := (M₁ ⊔ M₂).spanningCoe.connectedComponentMk v
@@ -53,12 +61,27 @@ theorem excl_disj_PM_graph_union_connected (hed : G.IsExclusivelyDisjointPMGraph
       /- M₁ ≤ G and M₁ ∆ c ≤ G but also M₁ isPM and (M₁ ∆ c).isPM, so M₁ and (M₁ ∆ c) are disjoint because of hed (remember this is a proof by contradiction)-/
         -- hed M₁ hM₁ symmDiffSubgraph symmDiffIsPM
         sorry
-      have h1 : (M₁.spanningCoe \ c.induce).edgeSet ≤ M₁.spanningCoe.edgeSet := by sorry
-      have h2 : (M₁.spanningCoe \ c.induce).edgeSet ≤ symmDiffSubgraph.edgeSet := by sorry
-      have h3 : (M₁.spanningCoe \ c.induce).edgeSet := by sorry
-      exact symmDiffDisjoint h1 h2 h3
+      let M₁_wo_c := M₁.spanningCoe \ c.induce
+      have h1 : M₁_wo_c.edgeSet ≤ M₁.spanningCoe.edgeSet := by sorry
+      have h2 : M₁_wo_c.edgeSet ≤ symmDiffSubgraph.edgeSet := by sorry
+      -- show that M₁ without c (the connected component containing v) contains v':
+      have h3 : (hM₁.1.toEdge ⟨x, hx⟩) ∈ M₁_wo_c.edgeSet := by sorry
+      have h5 : (hM₁.1.toEdge x) ∈ symmDiffSubgraph.edgeSet := by sorry
+      apply symmDiffDisjoint h1 h2
+      exact h3
     /- Show that V is nonempty -/
     · by_contra h
       rw [not_nonempty_iff] at h
       apply hne
       exact h.elim v
+
+-- theorem excl_disj_PM_graph_union_ham_cycle (hed : G.IsExclusivelyDisjointPMGraph)
+--   (hM₁ : M₁.IsPerfectMatching) (hM₂ : M₂.IsPerfectMatching) (hne : M₁ ≠ M₂) :
+--     G.IsHamiltonian := by sorry
+
+
+structure PerfectMatching (G : SimpleGraph V) where
+  M: Subgraph G
+  PM: M.IsPerfectMatching
+
+lemma make new matching

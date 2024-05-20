@@ -43,12 +43,16 @@ lemma flip_part_of_disjoint (M₁ M₂ : Subgraph G) (hd : Disjoint M₁.edgeSet
   (hM₁ : M₁.IsPerfectMatching) (hM₂ : M₂.IsPerfectMatching)
   (c : (M₁ ⊔ M₂).spanningCoe.ConnectedComponent)
   (hsd : (symmDiff M₁.spanningCoe c.induce) ≤ G) :
-  (SimpleGraph.toSubgraph (symmDiff M₁.spanningCoe c.induce) hsd).IsPerfectMatching := by sorry
+  (SimpleGraph.toSubgraph (symmDiff M₁.spanningCoe c.induce) hsd).IsPerfectMatching := by
+    sorry
 
 /- Ported from https://github.com/leanprover-community/mathlib/blob/kmill_hamiltonian/src/hamiltonian2.lean -/
 lemma flip_part_of_disjoint_le (M₁ M₂ : Subgraph G)
   (c : (M₁ ⊔ M₂).spanningCoe.ConnectedComponent) :
   symmDiff M₁.spanningCoe c.induce ≤ M₁.spanningCoe ⊔ M₂.spanningCoe := by
+    intros v w
+    simp only [symmDiff_def]
+    simp only [sup_adj, sdiff_adj]
     sorry
 
 /- Ported from https://github.com/leanprover-community/mathlib/blob/kmill_hamiltonian/src/hamiltonian2.lean -/
