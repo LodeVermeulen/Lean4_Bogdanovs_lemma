@@ -7,6 +7,11 @@ import Mathlib.Combinatorics.SimpleGraph.Subgraph
 import Mathlib.Data.Set.Basic
 import Mathlib.Data.Fintype.Basic
 
+
+/-
+All of the code in this file is written by Pjotr Buys and full credit goes to him.
+-/
+
 universe u -- v
 
 namespace SimpleGraph
